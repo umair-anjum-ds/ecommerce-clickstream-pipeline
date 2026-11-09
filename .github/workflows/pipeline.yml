@@ -1,0 +1,154 @@
+name: Clickstream pipeline
+
+# WHEN does this workflow run?
+on:
+  push:                       # every push to any branch
+  pull_request:               # every pull request
+  schedule:
+    - cron: "0 6 * * 1"       # every Monday at 06:00 UTC (weekly refresh of the report)
+  workflow_dispatch:          # manual "Run workflow" button in the GitHub Actions tab
+    inputs:
+      sessions:
+        description: "Number of fake sessions to generate when no real data is available"
+        default: "6000"
+      run_notebook:
+        description: "Also execute the notebook (slower)?"
+        type: boolean
+        default: false
+
+concurrency:                  # a new push cancels an older run of the same branch
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------- 1) quality checks
+  lint-and-test:
+    name: Lint and unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - uses: actions/setup-java@v4      # Spark needs Java
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Unit tests (pytest)
+        run: pytest
+
+  # ---------------------------------------------------------------- 2) run the pipeline
+  pipeline:
+    name: Run the pipeline
+    needs: lint-and-test              # only runs if the checks above passed
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write                 # needed to commit the refreshed report
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Prepare input data
+        # The real events.csv is too big for git, so the automation generates fake data
+        # with the same columns. Put the real file in data/ to analyse real data locally.
+        run: |
+          if [ ! -f data/events.csv ]; then
+            python scripts/generate_sample_data.py --sessions "${{ github.event.inputs.sessions || '6000' }}" --out data/events.csv
+          fi
+
+      - name: Run the pipeline
+        run: python -m src.run_pipeline --input data/events.csv --output outputs --reports reports
+
+      - name: Show the summary on the run page
+        run: cat reports/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload results (tables, charts, models, parquet)
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-results
+          path: |
+            outputs/tables
+            outputs/charts
+            outputs/models
+            outputs/metrics.json
+            reports/summary.md
+          retention-days: 30
+
+      - name: Commit the refreshed report back to the repository
+        # Only on the weekly schedule or a manual run, never on normal pushes (avoids loops)
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          if git diff --cached --quiet; then
+            echo "No report changes to commit."
+          else
+            git commit -m "chore: refresh pipeline report [skip ci]"
+            git push
+          fi
+
+  # ---------------------------------------------------------------- 3) optional: run the notebook
+  notebook:
+    name: Execute the notebook
+    needs: lint-and-test
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_notebook == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt jinja2 nbconvert ipykernel
+
+      - name: Prepare input data
+        run: python scripts/generate_sample_data.py --sessions 6000 --out data/events.csv
+
+      - name: Execute the notebook
+        env:
+          EVENTS_CSV: data/events.csv
+        run: |
+          jupyter nbconvert --to notebook --execute notebooks/pyspark_events_31steps_project.ipynb \
+            --output executed.ipynb --output-dir outputs/notebook --ExecutePreprocessor.timeout=1800
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: executed-notebook
+          path: outputs/notebook/executed.ipynb
