@@ -1,0 +1,11 @@
+# Runs automatically on every `git commit` after:  pre-commit install
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.7
+    hooks:
+      - id: ruff              # finds mistakes in the code
+        args: [--fix]
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
+    hooks:
+      - id: nbstripout        # removes notebook outputs so git diffs stay small and clean

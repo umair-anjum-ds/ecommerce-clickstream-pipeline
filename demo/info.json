@@ -1,0 +1,200 @@
+{
+  "kpis": {
+    "total_events": 51977,
+    "unique_users": 3468,
+    "unique_sessions": 8000,
+    "unique_products": 300,
+    "total_revenue": 1533473.24,
+    "purchases": 2555,
+    "avg_price": 605.42,
+    "median_price": 608.14
+  },
+  "funnel": {
+    "sessions": 8000,
+    "sessions_with_view": 7868,
+    "sessions_with_cart": 3727,
+    "sessions_with_purchase": 2145,
+    "view_and_cart": 3637,
+    "cart_and_purchase": 1121,
+    "view_to_cart_rate": 0.46225216065073715,
+    "cart_to_purchase_rate": 0.3007781057150523,
+    "cart_abandonment_rate": 0.6992218942849477
+  },
+  "quality": {
+    "rows_before": 51977,
+    "rows_after": 51977,
+    "rows_removed": 0,
+    "issues": {
+      "rows": 51977,
+      "unreadable_time": 0,
+      "unmapped_event_type": 0,
+      "missing_session": 0,
+      "missing_or_invalid_price": 0
+    },
+    "missing_values": {
+      "event_type": 0,
+      "user_session": 0,
+      "user_id": 0,
+      "price": 0,
+      "product_id": 0,
+      "category_code": 4921,
+      "brand": 12314,
+      "event_ts": 0
+    }
+  },
+  "rdd": {
+    "events": 51977,
+    "bad_rows": 0,
+    "events_per_type": {
+      "view": 44148,
+      "cart": 5274,
+      "purchase": 2555
+    },
+    "purchases": 2555,
+    "revenue": 1533473.24,
+    "top_brands": [
+      [
+        "xiaomi",
+        193210.4300000002
+      ],
+      [
+        "sony",
+        192816.95999999982
+      ],
+      [
+        "asus",
+        161400.92999999993
+      ],
+      [
+        "samsung",
+        153192.45000000007
+      ],
+      [
+        "gigabyte",
+        150413.2999999999
+      ]
+    ],
+    "common_paths": [
+      [
+        "view",
+        554
+      ],
+      [
+        "view>view",
+        499
+      ],
+      [
+        "view>view>view",
+        378
+      ],
+      [
+        "cart",
+        67
+      ],
+      [
+        "cart>view",
+        58
+      ]
+    ],
+    "top_users": [
+      [
+        "961",
+        89
+      ],
+      [
+        "1682",
+        88
+      ],
+      [
+        "2026",
+        87
+      ],
+      [
+        "1666",
+        85
+      ],
+      [
+        "449",
+        84
+      ]
+    ],
+    "scored_users": 3468
+  },
+  "column_map": {
+    "event_time": "event_time",
+    "event_type": "event_type",
+    "user_session": "user_session",
+    "user_id": "user_id",
+    "price": "price",
+    "product_id": "product_id",
+    "category_code": "category_code",
+    "brand": "brand"
+  },
+  "event_map": {
+    "cart": "cart",
+    "purchase": "purchase",
+    "view": "view"
+  },
+  "seconds": 130.3,
+  "warnings": [],
+  "ml": {
+    "feature_ranges": {
+      "n_views": {
+        "min": 0.0,
+        "median": 7.0,
+        "p95": 10.0,
+        "max": 11.0
+      },
+      "n_carts": {
+        "min": 1.0,
+        "median": 1.0,
+        "p95": 3.0,
+        "max": 5.0
+      },
+      "avg_price": {
+        "min": 31.64,
+        "median": 608.165,
+        "p95": 822.6439999999996,
+        "max": 1167.81
+      },
+      "max_price": {
+        "min": 31.64,
+        "median": 1088.0,
+        "p95": 1194.85,
+        "max": 1199.23
+      },
+      "n_products": {
+        "min": 1.0,
+        "median": 8.0,
+        "p95": 11.0,
+        "max": 12.0
+      },
+      "n_brands": {
+        "min": 1.0,
+        "median": 5.0,
+        "p95": 7.0,
+        "max": 9.0
+      },
+      "duration_secs": {
+        "min": 0.0,
+        "median": 2124.0,
+        "p95": 3597.25,
+        "max": 4445.0
+      },
+      "is_weekend": {
+        "min": 0.0,
+        "median": 0.0,
+        "p95": 1.0,
+        "max": 1.0
+      }
+    },
+    "best_sklearn": "Logistic Regression",
+    "cart_sessions": 3727,
+    "purchased_share": 0.3007781057150523,
+    "best_model": "Logistic Regression",
+    "best_framework": "scikit-learn",
+    "best_auc": 0.7225770817186484,
+    "reload_ok": true
+  },
+  "input": "demo (synthetic data)"
+}
