@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Spark
+spark-warehouse/
+metastore_db/
+derby.log
+
+# Data and generated files (the real events.csv is large and is never committed)
+data/*
+!data/.gitkeep
+outputs/
+models/
+output/
+
+# Local virtual environment created by run.py
+.venv/
+
+# manually downloaded packages for offline install (see README)
+wheels/
