@@ -1,0 +1,20 @@
+[server]
+maxUploadSize = 2000        # megabytes: allow big CSV files
+headless = true
+
+[browser]
+gatherUsageStats = false
+
+# Two themes. By default the app follows your system setting.
+# To choose by hand: open the menu (three dots, top right) > Settings > Theme.
+[theme.light]
+primaryColor = "#6D4AFF"
+backgroundColor = "#F3F5FB"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1B2142"
+
+[theme.dark]
+primaryColor = "#7C5CFF"
+backgroundColor = "#0A0F1F"
+secondaryBackgroundColor = "#121936"
+textColor = "#E8ECF8"
