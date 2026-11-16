@@ -1,6 +1,6 @@
 # Pipeline summary
 
-Generated: 2026-11-04 23:45 UTC  |  input: `data/events.csv`
+Generated: 2026-11-16 14:11 UTC  |  input: `data/events.csv`
 
 ## Data quality
 | Metric | Value |
@@ -91,10 +91,10 @@ Cart sessions: 2,751 | purchased share: 29.8% | best model: **Random Forest** (s
 
 | Framework | Algorithm | AUC | Accuracy |
 |---|---|---|---|
-| scikit-learn | Random Forest | 0.680 | 0.707 |
+| scikit-learn | Random Forest | 0.680 | 0.715 |
 | Spark MLlib | Random Forest | 0.672 | 0.718 |
 | Spark MLlib | Gradient Boosted Trees | 0.672 | 0.709 |
-| scikit-learn | Hist Gradient Boosting | 0.652 | 0.687 |
+| scikit-learn | Hist Gradient Boosting | 0.646 | 0.686 |
 | scikit-learn | Logistic Regression | 0.640 | 0.717 |
 | Spark MLlib | Logistic Regression | 0.635 | 0.713 |
 
