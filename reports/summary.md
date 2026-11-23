@@ -1,6 +1,6 @@
 # Pipeline summary
 
-Generated: 2026-11-16 14:11 UTC  |  input: `data/events.csv`
+Generated: 2026-11-23 16:44 UTC  |  input: `data/events.csv`
 
 ## Data quality
 | Metric | Value |
